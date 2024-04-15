@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
+import { Box, Text } from "./utils/thems";
 
 const Button = () => {
   return (
-    <View>
-      <Text style={styles.textColor}>Button Component Test</Text>
-    </View>
+    <Box bg="primary" p="4" borderRadius="rounded-3xl">
+      <Text color="whilte">Button Component Test</Text>
+    </Box>
   );
 };
 
