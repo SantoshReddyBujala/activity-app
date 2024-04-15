@@ -1,0 +1,20 @@
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React from "react";
+import { AuthStackParamList } from "./types";
+import WelcomeScreen from "screens/welcome-screen";
+import SignInScreen from "screens/sign-in";
+import SignUpScreen from "screens/sign-up";
+
+const Stack = createNativeStackNavigator<AuthStackParamList>();
+
+const AuthStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Welcome" component={WelcomeScreen} />
+      <Stack.Screen name="SignIn" component={SignInScreen} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} />
+    </Stack.Navigator>
+  );
+};
+
+export default AuthStackNavigator;
