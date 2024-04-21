@@ -26,6 +26,7 @@ const BottomTabNavigator = () => {
         options={() => ({
           title: "Completed",
           tabBarIcon: ({ color }) => <Icons name="completed" color={color} />,
+          headerShown: false,
         })}
       />
       <Tab.Screen
@@ -34,6 +35,7 @@ const BottomTabNavigator = () => {
         options={() => ({
           title: "Calender",
           tabBarIcon: ({ color }) => <Icons name="calender" color={color} />,
+          headerShown: false,
         })}
       />
       <Tab.Screen
@@ -42,6 +44,7 @@ const BottomTabNavigator = () => {
         options={() => ({
           title: "Categories",
           tabBarIcon: ({ color }) => <Icons name="categories" color={color} />,
+          headerShown: false,
         })}
       />
     </Tab.Navigator>

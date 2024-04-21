@@ -1,10 +1,13 @@
+import SafeAreaWrapper from "components/shared/safe-area-wrapper";
 import { Box, Text } from "components/utils/thems";
 
 const HomeScreen = () => {
   return (
-    <Box>
-      <Text>Home Screen</Text>
-    </Box>
+    <SafeAreaWrapper>
+      <Box>
+        <Text>Home Screen</Text>
+      </Box>
+    </SafeAreaWrapper>
   );
 };
 
