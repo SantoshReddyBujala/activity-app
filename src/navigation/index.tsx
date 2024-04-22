@@ -12,7 +12,7 @@ const Navigation = () => {
       email: "santosh@gmail.com",
       name: "Santosh",
     });
-    //updateUser(null);
+    updateUser(null);
     return () => {};
   }, []);
 
