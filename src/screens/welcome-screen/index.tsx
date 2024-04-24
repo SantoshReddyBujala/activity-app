@@ -1,10 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
+import Button from "components/shared/button";
 import SafeAreaWrapper from "components/shared/safe-area-wrapper";
 import { Box, Text } from "components/utils/thems";
 import { colors } from "components/utils/thems/color";
 import { LinearGradient } from "expo-linear-gradient";
 import { AuthScreenNavigationType } from "navigation/types";
-import { Button, Image } from "react-native";
+import { Image } from "react-native";
 const ACTIVITY_LOGO =
   "https://fastly.picsum.photos/id/565/200/300.jpg?hmac=Ho0T-TCTMRX_uDDGzaLhGzTmukSZdDjpGZJTbL0NY3k";
 const WelcomeScreen = () => {
@@ -48,15 +49,12 @@ const WelcomeScreen = () => {
           >
             ACTIVITY APPLICATION
           </Text>
-          <Button
-            title="Navigate to Sign In"
-            onPress={navigationToSingInScreen}
-          ></Button>
-          <Text></Text>
-          <Button
-            title="Navigate to Sign Up"
-            onPress={navigationToSingUpScreen}
-          ></Button>
+          <Box mt="3" mx="10">
+            <Button
+              label="Start your journey"
+              onPress={() => console.log("navigationToSingInScreen")}
+            ></Button>
+          </Box>
         </Box>
       </LinearGradient>
     </SafeAreaWrapper>

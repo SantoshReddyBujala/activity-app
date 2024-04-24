@@ -1,5 +1,5 @@
 export const palette = {
-    whilte: "#ffffff",
+    white: "#ffffff",
     primary: "#42bdac",
     gray550: "#939292",
     gray650: "#8a8a8a",
@@ -276,7 +276,7 @@ export const palette = {
 }
 
 export const colors = {
-    whilte: palette.whilte,
+    white: palette.white,
     gray550: palette.gray550,
     gray650: palette.gray650,
     gray4: palette.gray4,
