@@ -6,8 +6,15 @@ type ButtonProps = {
   onPress: () => void;
   onLongpress?: () => void;
   disabled?: boolean;
+  uppercase?: boolean;
 };
-const Button = ({ label, onLongpress, onPress, disabled }: ButtonProps) => {
+const Button = ({
+  label,
+  onLongpress,
+  onPress,
+  disabled,
+  uppercase,
+}: ButtonProps) => {
   return (
     <Pressable onPress={onPress} onLongPress={onLongpress} disabled={disabled}>
       <Box
@@ -20,6 +27,7 @@ const Button = ({ label, onLongpress, onPress, disabled }: ButtonProps) => {
           fontWeight="500"
           color="white"
           textAlign="center"
+          textTransform={uppercase ? "uppercase" : "none"}
         >
           {label}
         </Text>
