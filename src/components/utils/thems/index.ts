@@ -14,6 +14,7 @@ const theme = createTheme({
         "6": 24,
         "7": 28,
         "10": 40,
+        "12": 54,
     },
     borderRadii: {
         "none": 0,

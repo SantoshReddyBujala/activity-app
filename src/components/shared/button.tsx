@@ -9,7 +9,7 @@ type ButtonProps = {
 };
 const Button = ({ label, onLongpress, onPress, disabled }: ButtonProps) => {
   return (
-    <Pressable>
+    <Pressable onPress={onPress} onLongPress={onLongpress} disabled={disabled}>
       <Box
         bg={disabled ? "gray800" : "primary"}
         py="4"

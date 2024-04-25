@@ -3,6 +3,7 @@ import Button from "components/shared/button";
 import SafeAreaWrapper from "components/shared/safe-area-wrapper";
 import { Box, Text } from "components/utils/thems";
 import { colors } from "components/utils/thems/color";
+import { textVariants } from "components/utils/thems/text-variants";
 import { LinearGradient } from "expo-linear-gradient";
 import { AuthScreenNavigationType } from "navigation/types";
 import { Image } from "react-native";
@@ -43,6 +44,7 @@ const WelcomeScreen = () => {
             />
           </Box>
           <Text
+            fontSize={textVariants.textLg.fontSize}
             textAlign="center"
             style={{ marginTop: 15, color: colors.emerald400 }}
             fontWeight="500"
@@ -52,8 +54,18 @@ const WelcomeScreen = () => {
           <Box mt="3" mx="10">
             <Button
               label="Start your journey"
-              onPress={() => console.log("navigationToSingInScreen")}
+              onPress={navigationToSingUpScreen}
             ></Button>
+          </Box>
+          <Box alignItems="center">
+            <Text
+              fontSize={textVariants.textLg.fontSize}
+              textAlign="center"
+              style={{ marginTop: 15, color: colors.gray700 }}
+              fontWeight="500"
+            >
+              Santosh Bujala
+            </Text>
           </Box>
         </Box>
       </LinearGradient>
