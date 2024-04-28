@@ -16,7 +16,7 @@ const Input = ({ label, error, ...props }: InputProps) => {
       </Text>
       <TextInput
         style={{
-          borderColor: palette.gray700,
+          borderColor: error ? theme.colors.rose500 : theme.colors.gray650,
           borderWidth: 1,
           paddingVertical: 16,
           borderRadius: theme.spacing[7],
@@ -24,6 +24,11 @@ const Input = ({ label, error, ...props }: InputProps) => {
         }}
         {...props}
       />
+      {error && (
+        <Text mt="3" color="rose500">
+          {label} is required
+        </Text>
+      )}
     </Box>
   );
 };

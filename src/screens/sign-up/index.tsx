@@ -28,7 +28,6 @@ const SignUpScreen = () => {
   const onSubmit = async (data: IUser) => {
     try {
       const { name, email, password } = data;
-      console.log(name);
       await registerUser({
         name,
         email,
@@ -95,7 +94,7 @@ const SignUpScreen = () => {
                 onChangeText={onChange}
                 value={value}
                 placeholder="Password"
-                error={errors.name}
+                error={errors.password}
                 secureTextEntry
               />
             )}

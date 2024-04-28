@@ -6,5 +6,5 @@ interface IUser {
 
 interface IAuthenticatedUser {
     email: string,
-    name: string
+    password: string
 }

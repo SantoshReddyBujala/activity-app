@@ -2,7 +2,7 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 export const BASE_URL = "http://10.0.0.147:3600/";
 const TIME_OUT = 30000;
-const ACTIVITY_TOKEN = "activity_user_token";
+export const ACTIVITY_TOKEN = "activity_user_token";
 
 
 const axiosInstance = axios.create({
