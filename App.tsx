@@ -2,15 +2,48 @@ import { ThemeProvider } from "@shopify/restyle";
 import theme from "components/utils/thems";
 import { StatusBar } from "expo-status-bar";
 import Navigation from "navigation";
-import { useEffect } from "react";
+import { AppState } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import useUserGlobalStore from "store/useUserGlobalStore";
+import { SWRConfig } from "swr";
 
 export default function App() {
   return (
     <SafeAreaProvider>
       <ThemeProvider theme={theme}>
-        <Navigation />
+        <SWRConfig
+          value={{
+            provider: () => new Map(),
+            isVisible: () => {
+              return true;
+            },
+            initFocus(callback) {
+              let appState = AppState.currentState;
+
+              const onAppStateChange = (nextAppState: any) => {
+                /* If it's resuming from background or inactive mode to active one */
+                if (
+                  appState.match(/inactive|background/) &&
+                  nextAppState === "active"
+                ) {
+                  callback();
+                }
+                appState = nextAppState;
+              };
+
+              // Subscribe to the app state change events
+              const subscription = AppState.addEventListener(
+                "change",
+                onAppStateChange
+              );
+
+              return () => {
+                subscription.remove();
+              };
+            },
+          }}
+        >
+          <Navigation />
+        </SWRConfig>
         <StatusBar translucent />
       </ThemeProvider>
     </SafeAreaProvider>
