@@ -3,6 +3,7 @@ import React from "react";
 import CategoriesScreen from "screens/categories";
 import { CategoriesStackParamList } from "./types";
 import CategoryScreen from "screens/category";
+import CreateCategory from "screens/create-category";
 
 const Stack = createNativeStackNavigator<CategoriesStackParamList>();
 
@@ -19,6 +20,13 @@ const CategoryStackNavigator = () => {
       <Stack.Screen
         name="Category"
         component={CategoryScreen}
+        options={() => ({
+          headerShown: false,
+        })}
+      />
+      <Stack.Screen
+        name="CreateCategory"
+        component={CreateCategory}
         options={() => ({
           headerShown: false,
         })}

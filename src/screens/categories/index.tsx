@@ -1,4 +1,5 @@
 import Category from "components/categories/category";
+import CreateNewList from "components/categories/create-new-list";
 import Loader from "components/shared/loader";
 import SafeAreaWrapper from "components/shared/safe-area-wrapper";
 import { Box, Text } from "components/utils/thems";
@@ -29,6 +30,8 @@ const CategoriesScreen = () => {
           ItemSeparatorComponent={() => <Box height={14} />}
           keyExtractor={(item) => item._id}
         />
+
+        <CreateNewList />
       </Box>
     </SafeAreaWrapper>
   );
