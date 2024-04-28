@@ -5,8 +5,6 @@ import useSWR from "swr";
 
 const HomeScreen = () => {
   const { data, isLoading } = useSWR("categories", fetcher);
-
-  console.log(`data`, JSON.stringify(data, null, 2));
   return (
     <SafeAreaWrapper>
       <Box>
