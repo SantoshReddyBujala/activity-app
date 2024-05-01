@@ -9,9 +9,9 @@ const CreateCategory = () => {
   const [newCategory, setNewCategory] = useState<
     Omit<ICategory, "_id" | "user" | "isEditable">
   >({
-    name:"",
+    name: "",
     color: null,
-    icon: null
+    icon: null,
   });
   return (
     <SafeAreaWrapper>
@@ -35,13 +35,13 @@ const CreateCategory = () => {
             maxLength={36}
             placeholder="Create new category list"
             placeholderTextColor={theme.colors.gray500}
-            onChangeText={(text)=>{
-              setNewCategory(prev =>{
-                return{
-                  ..prev,
-                  name:text
-                }
-              })
+            onChangeText={(text) => {
+              setNewCategory((prev) => {
+                return {
+                  ...prev,
+                  name: text,
+                };
+              });
             }}
           />
         </Box>
