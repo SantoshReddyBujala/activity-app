@@ -1,11 +1,18 @@
-import React from "react";
-import SafeAreaWrapper from "components/shared/safe-area-wrapper";
-import theme, { Box, Text } from "components/utils/thems";
-import { Feather } from "@expo/vector-icons";
 import NavigateBack from "components/shared/navigate-back";
+import SafeAreaWrapper from "components/shared/safe-area-wrapper";
+import theme, { Box } from "components/utils/thems";
+import React, { useState } from "react";
 import { TextInput } from "react-native";
+import { ICategory } from "types";
 
 const CreateCategory = () => {
+  const [newCategory, setNewCategory] = useState<
+    Omit<ICategory, "_id" | "user" | "isEditable">
+  >({
+    name:"",
+    color: null,
+    icon: null
+  });
   return (
     <SafeAreaWrapper>
       <Box flex={1} mx="4">
@@ -28,6 +35,14 @@ const CreateCategory = () => {
             maxLength={36}
             placeholder="Create new category list"
             placeholderTextColor={theme.colors.gray500}
+            onChangeText={(text)=>{
+              setNewCategory(prev =>{
+                return{
+                  ..prev,
+                  name:text
+                }
+              })
+            }}
           />
         </Box>
       </Box>
