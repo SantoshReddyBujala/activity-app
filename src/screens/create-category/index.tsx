@@ -4,7 +4,7 @@ import SafeAreaWrapper from "components/shared/safe-area-wrapper";
 import theme, { Box, Text } from "components/utils/thems";
 import React, { useState } from "react";
 import { Pressable, TextInput } from "react-native";
-import { ICategory, IColor } from "types";
+import { ICategory, IColor, IIcon } from "types";
 import { getColors, getIcons } from "utils/helpers";
 
 const COLORS = getColors();
@@ -14,7 +14,10 @@ const DEFAULT_ICONS = ICONS[0];
 const CreateCategory = () => {
   const createCategory = async () => {
     try {
-    } catch (error) {}
+      console.log(`newCategory`, JSON.stringify(newCategory, null, 2));
+    } catch (error) {
+      console.log("Error while create a category", error);
+    }
   };
 
   const updateColor = (color: IColor) => {
@@ -22,6 +25,15 @@ const CreateCategory = () => {
       return {
         ...prev,
         color,
+      };
+    });
+  };
+
+  const updateIcon = (icon: IIcon) => {
+    setNewCategory((prev) => {
+      return {
+        ...prev,
+        icon,
       };
     });
   };
@@ -103,7 +115,42 @@ const CreateCategory = () => {
             })}
           </Box>
         </Box>
-        <Box style={{ marginTop: "100%" }}>
+
+        <Box height={16} />
+        <Box backgroundColor="gray300" p="4" borderRadius="rounded-2xl">
+          <Box
+            bg="white"
+            p="2"
+            width={60}
+            height={40}
+            mb="4"
+            alignItems="center"
+            justifyContent="center"
+            borderRadius="rounded-2xl"
+          >
+            <Text fontWeight="600" variant="textSm">
+              {newCategory.icon.symbol}
+            </Text>
+          </Box>
+          <Box flexDirection="row" justifyContent="space-evenly">
+            {ICONS.map((_icon) => {
+              return (
+                <Pressable
+                  key={_icon.id}
+                  onPress={() => {
+                    updateIcon(_icon);
+                  }}
+                >
+                  <Box width={36} height={36} borderRadius="rounded-2xl">
+                    <Text>{_icon.symbol}</Text>
+                  </Box>
+                </Pressable>
+              );
+            })}
+          </Box>
+        </Box>
+
+        <Box position="absolute" bottom={40} left={0} right={0}>
           <Button label="Create new category" onPress={createCategory} />
         </Box>
       </Box>
