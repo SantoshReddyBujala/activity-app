@@ -9,6 +9,8 @@ import { getColors, getIcons } from "utils/helpers";
 import useSWRMutation from "swr/mutation";
 import axiosInstance, { BASE_URL } from "services/config";
 import { useSWRConfig } from "swr";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { CategoriesStackParamList } from "navigation/types";
 
 const COLORS = getColors();
 const ICONS = getIcons();
@@ -29,35 +31,68 @@ const createCategoryRequest = async (
   }
 };
 
+const updateCategoryRequest = async (
+  url: string,
+  { arg }: { arg: ICategoryRequest }
+) => {
+  try {
+    console.log(arg);
+    await axiosInstance.put(url, {
+      ...arg,
+    });
+  } catch (error) {
+    console.log("Error while create category");
+  }
+};
+
 const CreateCategory = () => {
   const { mutate } = useSWRConfig();
+
+  const navigation = useNavigation();
+
+  const route = useRoute<createCategoryRouteTypes>();
 
   const { trigger, isMutating } = useSWRMutation(
     "categories/create",
     createCategoryRequest
   );
 
+  const { trigger: updateTriger } = useSWRMutation(
+    "categories/update",
+    updateCategoryRequest
+  );
+
   const [newCategory, setNewCategory] = useState<
     Omit<ICategory, "_id" | "user" | "isEditable">
   >({
-    name: "",
-    color: DEFAULT_COLOR,
-    icon: DEFAULT_ICONS,
+    name: route.params.category?.name ?? "",
+    color: route.params.category?.color ?? DEFAULT_COLOR,
+    icon: route.params.category?.icon ?? DEFAULT_ICONS,
   });
   const createCategory = async () => {
-    //console.log(newCategory);
-
-    console.log(newCategory);
     await mutate(BASE_URL + "categories");
-
     try {
-      trigger({
-        ...newCategory,
-      });
+      if (route.params.category) {
+        const updateCategoryItem = {
+          ...route.params.category,
+          ...newCategory,
+        };
+        updateTriger({ ...updateCategoryItem });
+      } else {
+        trigger({
+          ...newCategory,
+        });
+      }
+      navigation.goBack();
     } catch (error) {
       console.log("Error while create a category", error);
     }
   };
+
+  type createCategoryRouteTypes = RouteProp<
+    CategoriesStackParamList,
+    "CreateCategory"
+  >;
 
   const updateColor = (color: IColor) => {
     setNewCategory((prev) => {
@@ -96,6 +131,7 @@ const CreateCategory = () => {
               lineHeight: 26,
               padding: 16,
             }}
+            value={newCategory.name}
             maxLength={36}
             placeholder="Create new category list"
             placeholderTextColor={theme.colors.gray500}

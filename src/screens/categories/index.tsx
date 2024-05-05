@@ -9,12 +9,16 @@ import useSWR from "swr";
 import { ICategory } from "types";
 
 const CategoriesScreen = () => {
-  const { data, isLoading, error } = useSWR<ICategory[]>("categories", fetcher);
+  const { data, isLoading, error } = useSWR<ICategory[]>(
+    "categories/",
+    fetcher,
+    { refreshInterval: 2000 }
+  );
 
   if (isLoading) {
     return <Loader />;
   }
-
+  console.log(data);
   const renderItem = ({ item }: { item: ICategory }) => (
     <Category category={item} />
   );

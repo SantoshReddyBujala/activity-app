@@ -3,6 +3,7 @@ import {
   NavigatorScreenParams,
 } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { ICategory } from "types";
 
 export type AuthStackParamList = {
   Welcome: undefined;
@@ -20,7 +21,7 @@ export type RootBottomTabParamList = {
 export type CategoriesStackParamList = {
   Categories: undefined;
   Category: { id: string };
-  CreateCategory: { id?: string };
+  CreateCategory: { category?: ICategory };
 };
 
 export type HomeStackParamList = {

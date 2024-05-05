@@ -1,3 +1,4 @@
+import { IAuthenticatedUser, IUser } from "types";
 import axiosInstance, { ACTIVITY_TOKEN, saveToken } from "./config"
 
 type RegisterUserProps = IUser;
