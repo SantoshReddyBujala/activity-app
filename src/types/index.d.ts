@@ -28,3 +28,10 @@ interface ICategory {
     color: IColor,
     icon: IIcon
 }
+
+
+interface ICategoryRequest {
+    name: string,
+    color: IColor,
+    icon: IIcon
+}

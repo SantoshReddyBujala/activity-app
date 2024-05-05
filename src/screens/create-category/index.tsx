@@ -4,17 +4,56 @@ import SafeAreaWrapper from "components/shared/safe-area-wrapper";
 import theme, { Box, Text } from "components/utils/thems";
 import React, { useState } from "react";
 import { Pressable, TextInput } from "react-native";
-import { ICategory, IColor, IIcon } from "types";
+import { ICategory, ICategoryRequest, IColor, IIcon } from "types";
 import { getColors, getIcons } from "utils/helpers";
+import useSWRMutation from "swr/mutation";
+import axiosInstance, { BASE_URL } from "services/config";
+import { useSWRConfig } from "swr";
 
 const COLORS = getColors();
 const ICONS = getIcons();
 const DEFAULT_COLOR = COLORS[0];
 const DEFAULT_ICONS = ICONS[0];
+
+const createCategoryRequest = async (
+  url: string,
+  { arg }: { arg: ICategoryRequest }
+) => {
+  try {
+    console.log(arg);
+    await axiosInstance.post(url, {
+      ...arg,
+    });
+  } catch (error) {
+    console.log("Error while create category");
+  }
+};
+
 const CreateCategory = () => {
+  const { mutate } = useSWRConfig();
+
+  const { trigger, isMutating } = useSWRMutation(
+    "categories/create",
+    createCategoryRequest
+  );
+
+  const [newCategory, setNewCategory] = useState<
+    Omit<ICategory, "_id" | "user" | "isEditable">
+  >({
+    name: "",
+    color: DEFAULT_COLOR,
+    icon: DEFAULT_ICONS,
+  });
   const createCategory = async () => {
+    //console.log(newCategory);
+
+    console.log(newCategory);
+    await mutate(BASE_URL + "categories");
+
     try {
-      console.log(`newCategory`, JSON.stringify(newCategory, null, 2));
+      trigger({
+        ...newCategory,
+      });
     } catch (error) {
       console.log("Error while create a category", error);
     }
@@ -38,13 +77,6 @@ const CreateCategory = () => {
     });
   };
 
-  const [newCategory, setNewCategory] = useState<
-    Omit<ICategory, "_id" | "user" | "isEditable">
-  >({
-    name: "",
-    color: DEFAULT_COLOR,
-    icon: DEFAULT_ICONS,
-  });
   return (
     <SafeAreaWrapper>
       <Box flex={1} mx="4">
