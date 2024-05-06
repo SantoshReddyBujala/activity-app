@@ -11,6 +11,9 @@ import axiosInstance, { BASE_URL } from "services/config";
 import { useSWRConfig } from "swr";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { CategoriesStackParamList } from "navigation/types";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { color } from "@shopify/restyle";
+import { colors } from "components/utils/thems/color";
 
 const COLORS = getColors();
 const ICONS = getIcons();
@@ -22,7 +25,6 @@ const createCategoryRequest = async (
   { arg }: { arg: ICategoryRequest }
 ) => {
   try {
-    console.log(arg);
     await axiosInstance.post(url, {
       ...arg,
     });
@@ -36,12 +38,22 @@ const updateCategoryRequest = async (
   { arg }: { arg: ICategoryRequest }
 ) => {
   try {
-    console.log(arg);
     await axiosInstance.put(url, {
       ...arg,
     });
   } catch (error) {
     console.log("Error while create category");
+  }
+};
+
+const deleteCategoryRequest = async (
+  url: string,
+  { arg }: { arg: { id: string } }
+) => {
+  try {
+    await axiosInstance.delete(url + "/" + arg.id);
+  } catch (error) {
+    console.log("Error while delete Category Request");
   }
 };
 
@@ -51,6 +63,8 @@ const CreateCategory = () => {
   const navigation = useNavigation();
 
   const route = useRoute<createCategoryRouteTypes>();
+
+  const isEditing = route?.params?.category ? true : false;
 
   const { trigger, isMutating } = useSWRMutation(
     "categories/create",
@@ -62,19 +76,23 @@ const CreateCategory = () => {
     updateCategoryRequest
   );
 
+  const { trigger: deleteTriger } = useSWRMutation(
+    "categories/category",
+    deleteCategoryRequest
+  );
+
   const [newCategory, setNewCategory] = useState<
     Omit<ICategory, "_id" | "user" | "isEditable">
   >({
-    name: route.params.category?.name ?? "",
-    color: route.params.category?.color ?? DEFAULT_COLOR,
-    icon: route.params.category?.icon ?? DEFAULT_ICONS,
+    name: route?.params?.category?.name ?? "",
+    color: route?.params?.category?.color ?? DEFAULT_COLOR,
+    icon: route?.params?.category?.icon ?? DEFAULT_ICONS,
   });
   const createCategory = async () => {
-    await mutate(BASE_URL + "categories");
     try {
-      if (route.params.category) {
+      if (isEditing) {
         const updateCategoryItem = {
-          ...route.params.category,
+          ...route?.params?.category,
           ...newCategory,
         };
         updateTriger({ ...updateCategoryItem });
@@ -83,9 +101,23 @@ const CreateCategory = () => {
           ...newCategory,
         });
       }
+      await mutate(BASE_URL + "categories");
       navigation.goBack();
     } catch (error) {
       console.log("Error while create a category", error);
+    }
+  };
+
+  const deleteCategory = async () => {
+    await mutate(BASE_URL + "categories");
+    try {
+      if (isEditing && route.params.category?._id) {
+        await deleteTriger({ id: route?.params?.category?._id });
+      }
+      await mutate(BASE_URL + "categories");
+      navigation.goBack();
+    } catch (error) {
+      console.log("Error while delete a category", error);
     }
   };
 
@@ -122,6 +154,15 @@ const CreateCategory = () => {
           alignItems="center"
         >
           <NavigateBack />
+          {isEditing && (
+            <Pressable onPress={deleteCategory}>
+              <MaterialCommunityIcons
+                name="delete"
+                size={28}
+                color={colors?.red500}
+              />
+            </Pressable>
+          )}
         </Box>
         <Box height={16} />
         <Box bg="gray300" borderRadius="rounded-2xl">
@@ -131,10 +172,10 @@ const CreateCategory = () => {
               lineHeight: 26,
               padding: 16,
             }}
-            value={newCategory.name}
+            value={newCategory?.name}
             maxLength={36}
             placeholder="Create new category list"
-            placeholderTextColor={theme.colors.gray500}
+            placeholderTextColor={theme?.colors?.gray500}
             onChangeText={(text) => {
               setNewCategory((prev) => {
                 return {
@@ -158,7 +199,7 @@ const CreateCategory = () => {
             <Text
               fontWeight="600"
               variant="textSm"
-              color={newCategory.color.name as any}
+              color={newCategory?.color?.name as any}
             >
               Color
             </Text>
@@ -167,13 +208,13 @@ const CreateCategory = () => {
             {COLORS.map((_color) => {
               return (
                 <Pressable
-                  key={_color.id}
+                  key={_color?.id}
                   onPress={() => {
                     updateColor(_color);
                   }}
                 >
                   <Box
-                    style={{ backgroundColor: _color.code }}
+                    style={{ backgroundColor: _color?.code }}
                     width={24}
                     height={24}
                     borderRadius="rounded-2xl"
@@ -197,20 +238,20 @@ const CreateCategory = () => {
             borderRadius="rounded-2xl"
           >
             <Text fontWeight="600" variant="textSm">
-              {newCategory.icon.symbol}
+              {newCategory?.icon?.symbol}
             </Text>
           </Box>
           <Box flexDirection="row" justifyContent="space-evenly">
             {ICONS.map((_icon) => {
               return (
                 <Pressable
-                  key={_icon.id}
+                  key={_icon?.id}
                   onPress={() => {
                     updateIcon(_icon);
                   }}
                 >
                   <Box width={36} height={36} borderRadius="rounded-2xl">
-                    <Text>{_icon.symbol}</Text>
+                    <Text>{_icon?.symbol}</Text>
                   </Box>
                 </Pressable>
               );
@@ -219,7 +260,10 @@ const CreateCategory = () => {
         </Box>
 
         <Box position="absolute" bottom={40} left={0} right={0}>
-          <Button label="Create new category" onPress={createCategory} />
+          <Button
+            label={isEditing ? "Update Category" : "Create new category"}
+            onPress={createCategory}
+          />
         </Box>
       </Box>
     </SafeAreaWrapper>

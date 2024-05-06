@@ -12,13 +12,13 @@ const CategoriesScreen = () => {
   const { data, isLoading, error } = useSWR<ICategory[]>(
     "categories/",
     fetcher,
-    { refreshInterval: 2000 }
+    { refreshInterval: 1000 }
   );
 
   if (isLoading) {
     return <Loader />;
   }
-  console.log(data);
+
   const renderItem = ({ item }: { item: ICategory }) => (
     <Category category={item} />
   );
