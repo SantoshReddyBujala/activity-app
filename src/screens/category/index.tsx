@@ -16,11 +16,10 @@ const CategoryScreen = () => {
 
   const { id } = route.params;
 
-  const { data: selectCategory, isLoading: isLoadingCategory } = useSWR<
-    ICategory
-  >(`categories/${id}`, fetcher);
-
-  console.log(selectCategory);
+  const { data: category, isLoading: isLoadingCategory } = useSWR<ICategory>(
+    `categories/${id}`,
+    fetcher
+  );
 
   const {
     data: tasks,
@@ -30,7 +29,7 @@ const CategoryScreen = () => {
     refreshInterval: 1000,
   });
 
-  if (isLoadingTasks || isLoadingCategory || !selectCategory || !tasks) {
+  if (isLoadingTasks || isLoadingCategory || !category || !tasks) {
     return <Loader />;
   }
 
@@ -43,17 +42,17 @@ const CategoryScreen = () => {
         <Box height={16} />
         <Box flexDirection="row">
           <Text variant="textXl" fontWeight="700">
-            {selectCategory.name}
+            {category?.icon?.symbol}
           </Text>
           <Text
             variant="textXl"
             fontWeight="700"
             ml="3"
             style={{
-              color: selectCategory?.color?.code,
+              color: category?.color?.code,
             }}
           >
-            {selectCategory?.name}
+            {category?.name}
           </Text>
         </Box>
       </Box>
