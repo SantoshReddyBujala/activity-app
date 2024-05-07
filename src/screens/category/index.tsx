@@ -8,6 +8,7 @@ import { fetcher } from "services/config";
 import useSWR from "swr";
 import { ICategory, ITask } from "types";
 import React from "react";
+import TaskActions from "components/tasks/task-actions";
 
 type CategoryScreenRouteProp = RouteProp<CategoriesStackParamList, "Category">;
 
@@ -55,6 +56,8 @@ const CategoryScreen = () => {
             {category?.name}
           </Text>
         </Box>
+        <Box height={16} />
+        <TaskActions categoryId={id} />
       </Box>
     </SafeAreaWrapper>
   );

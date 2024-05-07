@@ -44,3 +44,10 @@ interface ITask {
     createdAt: string
     date: string
 }
+
+interface ITaskRequest {
+    name: string
+    isCompleted: boolean
+    categoryId: string
+    date: string
+}
