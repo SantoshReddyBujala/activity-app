@@ -2,7 +2,7 @@ import Loader from "components/shared/loader";
 import { Box, Text } from "components/utils/thems";
 import { format, isToday } from "date-fns";
 import React, { useState } from "react";
-import { Pressable, TextInput } from "react-native";
+import { FlatList, Pressable, TextInput } from "react-native";
 import { fetcher } from "services/config";
 import useSWR from "swr";
 import { ICategory, ITask, ITaskRequest } from "types";
@@ -22,14 +22,16 @@ const TaskActions = ({ categoryId }: TaskActionsProp) => {
     name: "",
   });
 
-  const [isSelectingCategory, setIsSelectingCategory] = useState<boolean>();
+  const [isSelectingCategory, setIsSelectingCategory] = useState<boolean>(
+    false
+  );
 
   const { data: categories, isLoading } = useSWR<ICategory[]>(
     "categories",
     fetcher
   );
 
-  if (isLoading) {
+  if (isLoading || !categories) {
     return <Loader />;
   }
 
@@ -43,6 +45,7 @@ const TaskActions = ({ categoryId }: TaskActionsProp) => {
       py="4"
       borderRadius="rounded-5xl"
       flexDirection="row"
+      position="relative"
     >
       <TextInput
         placeholder="Create a new task"
@@ -82,7 +85,11 @@ const TaskActions = ({ categoryId }: TaskActionsProp) => {
         </Pressable>
       </Box>
       <Box width={12} />
-      <Pressable>
+      <Pressable
+        onPress={() => {
+          setIsSelectingCategory((prev) => !prev);
+        }}
+      >
         <Box
           bg="white"
           flexDirection="row"
@@ -105,6 +112,50 @@ const TaskActions = ({ categoryId }: TaskActionsProp) => {
           </Text>
         </Box>
       </Pressable>
+      {selectedCategory && (
+        <Box position="absolute" right={40} bottom={-130}>
+          <FlatList
+            data={categories}
+            renderItem={({ item, index }) => {
+              return (
+                <Pressable
+                  onPress={() => {
+                    setNewTask((prev) => {
+                      return { ...prev, categoryId: item?._id };
+                    });
+                    setIsSelectingCategory(false);
+                  }}
+                >
+                  <Box
+                    bg="gray300"
+                    p="2"
+                    borderTopStartRadius={index === 0 ? "rounded-3xl" : "none"}
+                    borderTopEndRadius={index === 0 ? "rounded-3xl" : "none"}
+                    borderBottomStartRadius={
+                      categories?.length - 1 === index ? "rounded-2xl" : "none"
+                    }
+                    borderBottomEndRadius={
+                      categories?.length - 1 === index ? "rounded-2xl" : "none"
+                    }
+                  >
+                    <Box flexDirection="row">
+                      <Text>{item?.icon?.symbol}</Text>
+                      <Text
+                        ml="2"
+                        fontWeight={
+                          newTask?.categoryId === item?._id ? "700" : "400"
+                        }
+                      >
+                        {item?.name}
+                      </Text>
+                    </Box>
+                  </Box>
+                </Pressable>
+              );
+            }}
+          />
+        </Box>
+      )}
     </Box>
   );
 };
