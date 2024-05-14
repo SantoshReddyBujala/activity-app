@@ -9,6 +9,7 @@ import useSWR from "swr";
 import { ICategory, ITask } from "types";
 import React from "react";
 import TaskActions from "components/tasks/task-actions";
+import { FlatList } from "react-native";
 
 type CategoryScreenRouteProp = RouteProp<CategoriesStackParamList, "Category">;
 
@@ -58,6 +59,17 @@ const CategoryScreen = () => {
         </Box>
         <Box height={16} />
         <TaskActions categoryId={id} />
+        <Box height={16} />
+        <FlatList
+          data={tasks}
+          renderItem={({ item, index }) => {
+            return (
+              <Box>
+                <Text>{item?.name}</Text>
+              </Box>
+            );
+          }}
+        />
       </Box>
     </SafeAreaWrapper>
   );
