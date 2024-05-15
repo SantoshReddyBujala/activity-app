@@ -10,6 +10,7 @@ import { ICategory, ITask } from "types";
 import React from "react";
 import TaskActions from "components/tasks/task-actions";
 import { FlatList } from "react-native";
+import Task from "components/tasks/task";
 
 type CategoryScreenRouteProp = RouteProp<CategoriesStackParamList, "Category">;
 
@@ -63,11 +64,10 @@ const CategoryScreen = () => {
         <FlatList
           data={tasks}
           renderItem={({ item, index }) => {
-            return (
-              <Box>
-                <Text>{item?.name}</Text>
-              </Box>
-            );
+            return <Task task={item} />;
+          }}
+          ItemSeparatorComponent={() => {
+            return <Box height={14} />;
           }}
         />
       </Box>
