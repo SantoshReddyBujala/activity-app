@@ -3,7 +3,7 @@ import {
   NavigatorScreenParams,
 } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { ICategory } from "types";
+import { ICategory, ITask } from "types";
 
 export type AuthStackParamList = {
   Welcome: undefined;
@@ -26,7 +26,7 @@ export type CategoriesStackParamList = {
 
 export type HomeStackParamList = {
   Home: undefined;
-  EditTask: undefined;
+  EditTask: { task: ITask };
 };
 
 export type AppStackParamList = {
@@ -54,4 +54,8 @@ export type AuthScreenNavigationType<
 
 export type CategoriesNavigationType = NativeStackNavigationProp<
   CategoriesStackParamList
+>;
+
+export type HomeScreenNavigationType = NativeStackNavigationProp<
+  HomeStackParamList
 >;

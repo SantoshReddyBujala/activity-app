@@ -5,6 +5,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { Pressable } from "react-native";
 import useSWRMutation from "swr/dist/mutation";
 import axiosInstance from "services/config";
+import { useNavigation } from "@react-navigation/native";
+import { HomeScreenNavigationType } from "navigation/types";
 
 type TaskProps = {
   task: ITask;
@@ -29,6 +31,8 @@ const toggleTaskStatusRequest = async (
 const Task = ({ task }: TaskProps) => {
   const { trigger } = useSWRMutation("tasks/update", toggleTaskStatusRequest);
 
+  const navigation = useNavigation<HomeScreenNavigationType>();
+
   const toggleTaskStatus = async () => {
     try {
       const _updatedTask = {
@@ -41,15 +45,17 @@ const Task = ({ task }: TaskProps) => {
       throw error;
     }
   };
-
+  const navigateToEditTask = () => {
+    navigation.navigate("EditTask", { task });
+  };
   return (
-    <Pressable onPress={toggleTaskStatus}>
+    <Pressable onPress={toggleTaskStatus} onLongPress={navigateToEditTask}>
       <Box p="4" bg="gray300" borderRadius="rounded-5xl" flexDirection="row">
         <Box flexDirection="row" alignItems="center">
           <Box
             height={26}
             width={26}
-            bg={task.isCompleted ? "green500" : "gray400"}
+            bg={task.isCompleted ? "primary" : "gray400"}
             borderRadius="rounded-xl"
             alignItems="center"
             justifyContent="center"
