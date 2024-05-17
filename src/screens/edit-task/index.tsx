@@ -1,58 +1,83 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import Loader from "components/shared/loader";
 import NavigateBack from "components/shared/navigate-back";
 import SafeAreaWrapper from "components/shared/safe-area-wrapper";
+import { today } from "components/tasks/task-actions";
 import theme, { Box, Text } from "components/utils/thems";
-import { Pressable, TextInput } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useState } from "react";
-import { RouteProp, useRoute } from "@react-navigation/native";
-import { HomeStackParamList } from "navigation/types";
-import useSWR, { mutate, useSWRConfig } from "swr";
-import Loader from "components/shared/loader";
-import useSWRMutation from "swr/dist/mutation";
-import { ICategory, ITaskRequest } from "types";
-import axiosInstance, { fetcher } from "services/config";
 import { format, isToday } from "date-fns";
+import { HomeStackParamList } from "navigation/types";
+import { useState } from "react";
+import { FlatList, Pressable, TextInput } from "react-native";
+import { Calendar } from "react-native-calendars";
+import axiosInstance, { fetcher } from "services/config";
+import useSWR, { useSWRConfig } from "swr";
+import useSWRMutation from "swr/dist/mutation";
+import { ICategory, ITask } from "types";
 
 type EditTaskRouteType = RouteProp<HomeStackParamList, "EditTask">;
 
-const updateTaskRequest = async (
-  url: string,
-  { arg }: { arg: ITaskRequest }
-) => {
+const updateTaskRequest = async (url: string, { arg }: { arg: ITask }) => {
   try {
-    await axiosInstance.post(url, {
+    await axiosInstance.put(url + "/" + arg._id, {
       ...arg,
     });
-  } catch (error) {
-    console.log("error in update Task", error);
-    throw error;
-  }
+  } catch (error) {}
+};
+
+const deleteTaskRequest = async (
+  url: string,
+  { arg }: { arg: { id: string } }
+) => {
+  try {
+    console.log(arg.id);
+    await axiosInstance.delete(url + "/" + arg.id);
+  } catch (error) {}
 };
 
 const EditTaskScreen = () => {
+  const { mutate } = useSWRConfig();
   const route = useRoute<EditTaskRouteType>();
   const { task } = route.params;
   const [updateTask, setUpdateTask] = useState(task);
+  const navigation = useNavigation();
 
-  const onUpdateTask = async () => {
-    try {
-    } catch (error) {
-      console.log("error in onUpdateTask", error);
-      throw error;
-    }
-  };
-
-  const { data, trigger } = useSWRMutation("tasks/update", updateTaskRequest);
+  const { trigger } = useSWRMutation("tasks/edit", updateTaskRequest);
+  const { trigger: triggerDelete } = useSWRMutation("tasks", deleteTaskRequest);
   const [isSelectingCategory, setIsSelectingCategory] = useState<boolean>(
     false
   );
-  const [isSelectingDate, setIsSelectingDate] = useState<boolean>(false);
 
+  const [isSelectingDate, setIsSelectingDate] = useState<boolean>(false);
   const { data: categories, isLoading } = useSWR<ICategory[]>(
     "categories",
     fetcher
   );
-  const { mutate } = useSWRConfig();
+
+  const deleteTask = async () => {
+    try {
+      await triggerDelete({
+        id: task._id,
+      });
+      await mutate("tasks/");
+      navigation.goBack();
+    } catch (error) {
+      console.log("error in deleteTask", error);
+      throw error;
+    }
+  };
+  const onUpdateTask = async () => {
+    try {
+      if (updateTask.name.length.toString().trim().length > 0) {
+        await trigger({ ...updateTask });
+        await mutate("tasks/");
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.log("error in updateTask", error);
+      throw error;
+    }
+  };
 
   if (isLoading || !categories) {
     return <Loader />;
@@ -70,7 +95,7 @@ const EditTaskScreen = () => {
           justifyContent="space-between"
         >
           <NavigateBack />
-          <Pressable>
+          <Pressable onPress={deleteTask}>
             <MaterialCommunityIcons
               name="delete"
               size={26}
@@ -162,6 +187,76 @@ const EditTaskScreen = () => {
             </Pressable>
           </Box>
         </Box>
+        {isSelectingCategory && (
+          <Box alignItems="flex-end" my="4" justifyContent="flex-end">
+            <FlatList
+              data={categories}
+              renderItem={({ item, index }) => {
+                return (
+                  <Pressable
+                    onPress={() => {
+                      setUpdateTask((prev) => {
+                        return {
+                          ...prev,
+                          categoryId: item._id,
+                        };
+                      });
+                      setIsSelectingCategory(false);
+                    }}
+                  >
+                    <Box
+                      bg="gray300"
+                      p="2"
+                      borderTopStartRadius={
+                        index === 0 ? "rounded-3xl" : "none"
+                      }
+                      borderTopEndRadius={index === 0 ? "rounded-3xl" : "none"}
+                      borderBottomStartRadius={
+                        categories?.length - 1 === index
+                          ? "rounded-2xl"
+                          : "none"
+                      }
+                      borderBottomEndRadius={
+                        categories?.length - 1 === index
+                          ? "rounded-2xl"
+                          : "none"
+                      }
+                    >
+                      <Box flexDirection="row">
+                        <Text>{item.icon.symbol}</Text>
+                        <Text
+                          ml="2"
+                          fontWeight={
+                            updateTask.categoryId === item._id ? "700" : "400"
+                          }
+                        >
+                          {item.name}
+                        </Text>
+                      </Box>
+                    </Box>
+                  </Pressable>
+                );
+              }}
+            />
+          </Box>
+        )}
+        {isSelectingDate && (
+          <Box>
+            <Calendar
+              minDate={format(today, "Y-MM-dd")}
+              onDayPress={(day) => {
+                setIsSelectingDate(false);
+                const selectedDate = new Date(day.dateString).toISOString();
+                setUpdateTask((prev) => {
+                  return {
+                    ...prev,
+                    date: selectedDate,
+                  };
+                });
+              }}
+            />
+          </Box>
+        )}
       </Box>
     </SafeAreaWrapper>
   );

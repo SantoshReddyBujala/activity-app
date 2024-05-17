@@ -19,7 +19,7 @@
     "axios": "^1.6.8",
     "babel-plugin-module-resolver": "^5.0.0",
     "date-fns": "^3.6.0",
-    "expo": "^51.0.6",
+    "expo": "^51.0.8",
     "expo-linear-gradient": "^13.0.2",
     "expo-secure-store": "^13.0.1",
     "expo-status-bar": "^1.12.1",
