@@ -64,7 +64,7 @@ const CategoryScreen = () => {
         <FlatList
           data={tasks}
           renderItem={({ item, index }) => {
-            return <Task task={item} />;
+            return <Task task={item} mutateTasks={mutateTasks} />;
           }}
           ItemSeparatorComponent={() => {
             return <Box height={14} />;

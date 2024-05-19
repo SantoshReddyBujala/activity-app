@@ -1,6 +1,6 @@
 import Loader from "components/shared/loader";
 import { Box, Text } from "components/utils/thems";
-import { format, isToday } from "date-fns";
+import { format, isToday, parseISO } from "date-fns";
 import React, { useState } from "react";
 import { FlatList, Pressable, TextInput } from "react-native";
 import { Calendar } from "react-native-calendars";
@@ -56,7 +56,7 @@ const TaskActions = ({ categoryId }: TaskActionsProp) => {
   }
 
   const selectedCategory = categories?.find(
-    (_category) => _category._id === categoryId
+    (_category) => _category._id === newTask.categoryId
   );
 
   const onCreateTask = async () => {
@@ -217,10 +217,12 @@ const TaskActions = ({ categoryId }: TaskActionsProp) => {
       {isSelectingDate && (
         <Box>
           <Calendar
-            minDate={format(today, "Y-MM-dd")}
+            minDate={format(today, "y-MM-dd")}
             onDayPress={(day) => {
               setIsSelectingDate(false);
-              const selectedDate = new Date(day.dateString).toISOString();
+              const date = parseISO(day.dateString);
+              const selectedDate = new Date(date).toISOString();
+
               setNewTask((prev) => {
                 return {
                   ...prev,
