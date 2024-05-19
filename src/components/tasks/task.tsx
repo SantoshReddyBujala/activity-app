@@ -10,6 +10,7 @@ import { HomeScreenNavigationType } from "navigation/types";
 
 type TaskProps = {
   task: ITask;
+  mutateTasks: () => Promise<ITask[] | undefined>;
 };
 interface ITaskStatusRequest {
   id: string;
@@ -28,7 +29,7 @@ const toggleTaskStatusRequest = async (
     throw error;
   }
 };
-const Task = ({ task }: TaskProps) => {
+const Task = ({ task, mutateTasks }: TaskProps) => {
   const { trigger } = useSWRMutation("tasks/update", toggleTaskStatusRequest);
 
   const navigation = useNavigation<HomeScreenNavigationType>();
@@ -40,6 +41,7 @@ const Task = ({ task }: TaskProps) => {
         isCompleted: !task.isCompleted,
       };
       await trigger(_updatedTask);
+      mutateTasks();
     } catch (error) {
       console.log("Error while toggle task", error);
       throw error;

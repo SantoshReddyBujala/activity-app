@@ -33,7 +33,7 @@ const BottomTabNavigator = () => {
         name="Today"
         component={TodayScreen}
         options={() => ({
-          title: "Calender",
+          title: "Today",
           tabBarIcon: ({ color }) => <Icons name="calender" color={color} />,
           headerShown: false,
         })}
